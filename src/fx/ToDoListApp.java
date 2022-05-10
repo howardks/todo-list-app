@@ -94,7 +94,6 @@ public class ToDoListApp extends Application {
 	public static void add() { // Add item to the List
 		if (!tfAdd.getText().isBlank() && cbPriority.getValue() != null) {
 			String element = tfAdd.getText();
-			;
 			int priority = cbPriority.getValue();
 
 			toDoList.add(new ToDoItem(element, priority));
