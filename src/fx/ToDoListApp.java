@@ -17,13 +17,13 @@ import javafx.stage.Stage;
 
 public class ToDoListApp extends Application {
 
-	static ObservableList<ToDoItem> toDoList = FXCollections.observableArrayList();
-	static ListView<ToDoItem> toDoListView = new ListView<>(toDoList);
-	Button btnAdd = new Button("Add");
-	static TextField tfAdd = new TextField();
-	static ComboBox<Integer> cbPriority = new ComboBox<>();
-	Button btnComplete = new Button("Complete!");
-	static TextField tfCurrent = new TextField();
+	private static ObservableList<ToDoItem> toDoList = FXCollections.observableArrayList();
+	private static ListView<ToDoItem> toDoListView = new ListView<>(toDoList);
+	private static TextField tfAdd = new TextField();
+	private static TextField tfCurrent = new TextField();
+	private static ComboBox<Integer> cbPriority = new ComboBox<>();
+	private Button btnAdd = new Button("Add");
+	private Button btnComplete = new Button("Complete!");
 
 	@Override
 	public void start(Stage primaryStage) {
