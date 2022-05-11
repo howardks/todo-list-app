@@ -1,5 +1,7 @@
 package fx;
 
+import java.util.Stack;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,6 +12,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -24,11 +29,15 @@ public class ToDoListApp extends Application {
 	private static ComboBox<Integer> cbPriority = new ComboBox<>();
 	private Button btnAdd = new Button("Add");
 	private Button btnComplete = new Button("Complete!");
+	private Button btnRemove = new Button("Remove");
+	private static ObservableList<String> completedItems = FXCollections.observableArrayList();
+	private static ListView<String> completedItemsListView = new ListView<String>(completedItems);
+	private Button btnClear = new Button("Clear");
 
 	@Override
 	public void start(Stage primaryStage) {
 
-		// Set up panes
+		// Set up panes for mainTab
 		HBox exteriorPane = new HBox();
 		exteriorPane.setAlignment(Pos.CENTER);
 		exteriorPane.setStyle("-fx-background: lightgray");
@@ -40,12 +49,12 @@ public class ToDoListApp extends Application {
 		rightPane.setAlignment(Pos.TOP_RIGHT);
 		exteriorPane.getChildren().add(leftPane);
 		exteriorPane.getChildren().add(rightPane);
-
+		
 		leftPane.setPadding(new Insets(10, 10, 10, 10));
 		rightPane.setPadding(new Insets(10, 10, 10, 10));
 
 		// Left pane stuff
-		toDoListView.setMaxHeight(240);
+		toDoListView.setMaxHeight(260);
 		toDoListView.setMaxWidth(240);
 		toDoListView.setStyle("-fx-border-width: 1;-fx-border-color: black;-fx-border-radius: 3;");
 		leftPane.getChildren().add(new Label("To Do: "));
@@ -75,17 +84,60 @@ public class ToDoListApp extends Application {
 		lowerPane.getChildren().add(tfCurrent);
 		tfCurrent.setStyle("-fx-border-width: 1;-fx-border-color: black;-fx-border-radius: 3;");
 		tfCurrent.setEditable(false);
-		lowerPane.getChildren().add(btnComplete);
+		
+		// Bottom pane stuff for the bottom of the Lower pane
+		HBox bottomPane = new HBox();
+		bottomPane.setSpacing(26);
+		bottomPane.getChildren().add(btnComplete);
 		btnComplete.setStyle("-fx-border-width: 1;-fx-border-color: black;-fx-border-radius: 3;");
+		btnComplete.setPrefWidth(76);
+		bottomPane.getChildren().add(btnRemove);
+		btnRemove.setStyle("-fx-border-width: 1;-fx-border-color: black;-fx-border-radius: 3;");
+		btnRemove.setPrefWidth(76);
+		lowerPane.getChildren().add(bottomPane);
 		rightPane.getChildren().add(lowerPane);
 
-		// Event handlers
+		// Event handlers for mainTab
 		toDoListView.setOnMouseClicked(e -> update());
 		btnAdd.setOnAction(e -> add());
 		btnComplete.setOnAction(e -> complete());
+		btnRemove.setOnAction(e -> remove());
+		
+		// Set up panes for completedTab
+		VBox completedPane = new VBox();
+		completedPane.setPadding(new Insets(10, 10, 10, 10));
+		//completedPane.setAlignment(Pos.CENTER);
+		completedPane.setSpacing(10);
+		Label lblCompletedItems = new Label("Completed Items:");
+		completedPane.getChildren().add(lblCompletedItems);
+		lblCompletedItems.setPadding(new Insets(0, 0, 0, 72));
+		HBox completedPaneBottom = new HBox();
+		completedPaneBottom.setSpacing(10);
+		completedPaneBottom.setAlignment(Pos.BOTTOM_CENTER);
+		completedPaneBottom.getChildren().add(completedItemsListView);
+		completedItemsListView.setMaxSize(240, 260);
+		completedItemsListView.setStyle("-fx-border-width: 1;-fx-border-color: black;-fx-border-radius: 3;");
+		completedPaneBottom.getChildren().add(btnClear);
+		btnClear.setStyle("-fx-border-width: 1;-fx-border-color: black;-fx-border-radius: 3;");
+		completedPane.getChildren().add(completedPaneBottom);
+		
+		// Event handlers for completedTab
+		btnClear.setOnAction(e -> completedItems.clear());
+
+		// Set up TabPane
+		TabPane tabPane = new TabPane();
+		Tab mainTab = new Tab();
+		mainTab.setText("To Do");
+		mainTab.setContent(exteriorPane);
+		Tab completedTab = new Tab();
+		completedTab.setText("Completed");
+		completedTab.setContent(completedPane);
+		tabPane.getTabs().add(mainTab);
+		tabPane.getTabs().add(completedTab);
+		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 
 		// Window stuff
-		Scene scene = new Scene(exteriorPane, 460, 300);
+		Scene scene = new Scene(tabPane, 460, 340);
 		primaryStage.setTitle("To Do List"); // Set the stage title
 		primaryStage.setScene(scene); // Place the scene in the stage
 		primaryStage.show(); // Display the stage
@@ -110,11 +162,19 @@ public class ToDoListApp extends Application {
 
 		update();
 	}
+	
+	public static void remove() {
+		int index = toDoListView.getSelectionModel().getSelectedIndex();
+		if (index > -1) {
+			toDoList.remove(index);
+		}
+	}
 
 	public static void update() { // Remove completed items and resort the List, update tfCurrent
 
 		for (int i = 0; i < toDoList.size(); i++) {
 			if (toDoList.get(i).isCompleted() == true) {
+				completedItems.add(0, toDoList.get(i).getElement());
 				toDoList.remove(i);
 			}
 		}
