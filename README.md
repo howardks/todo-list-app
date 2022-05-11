@@ -8,5 +8,5 @@ The To Do tab displays a To Do list and options for Adding, Completing, and Remo
 The user may enter a new item and specify its priority, then click the Add button to add it to the To Do list on the left. <br>
 When an item in the To Do list is selected it appears in the Selected: text field. <br>
 The Complete! button causes the selected item to be removed from the To Do list and added to the Completed Items list on the Completed tab. <br>
-The Remove button causes the selected item to be removed from the To Do List and NOT added to the Completed Items list on the Completed tab. <br>
+The Remove button causes the selected item to be removed from the To Do list and NOT added to the Completed Items list on the Completed tab. <br>
 The Completed tab displays a Completed Items list and a Clear button, which removes everything from the Completed Items list. 
