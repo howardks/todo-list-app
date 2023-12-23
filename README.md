@@ -1,4 +1,4 @@
-# ToDoListApp
+# ToDo List App
 A fully functioning to-do list GUI using JavaFX.
 
 ![image](https://user-images.githubusercontent.com/93079698/167902322-d85f9288-ec8c-4074-a4f0-914d5634443e.png)
